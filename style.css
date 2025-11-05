@@ -1,283 +1,313 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Noto Sans", Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #3d0000; /* Dark Red */
-    color: #fff;
+    /* Heaven (left) vs Hell (right) split background: gold -> black */
+    background: linear-gradient(90deg, #6f0f12 0%, #080808 100%); /* maroon -> black */
+    color: #ffffff; /* all text white */
+    font-weight: 700; /* make text bold */
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    overflow-x: hidden; /* Prevent horizontal scrollbar from masks */
+    overflow-x: hidden;
     position: relative;
 }
 
+/* central container is transparent so split background shows; content boxes will provide contrast */
 .container {
-    background-color: #6a0000; /* Maroon */
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    max-width: 800px;
+    padding: 36px;
+    border-radius: 14px;
+    max-width: 980px;
     position: relative;
-    z-index: 1; /* Ensure content is above masks */
-    margin: 20px auto; /* Center container and provide vertical margin */
+    z-index: 1;
+    margin: 28px auto;
+    color: #ffffff;
+}
+
+/* Themed box used for header, sections, and important blocks — left side gold tint, right side deep black */
+.themed-box {
+    background: linear-gradient(90deg, rgba(255,215,0,0.06) 50%, rgba(0,0,0,0.65) 50%);
+    border: 1px solid rgba(255,215,0,0.18);
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    text-align: center;
+}
+
+/* header area */
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
 header .logo {
     max-width: 150px;
-    margin-bottom: 20px;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6));
 }
 
-h1 {
-    color: #ffda47; /* Yellow */
-    font-size: 3em;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+/* Season title box */
+.header-title {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(255,215,0,0.95) 55%, rgba(0,0,0,0.95) 55%);
+    color: #080808; /* dark text on gold */
+    font-weight: 800;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    font-size: 1.6rem;
 }
 
+/* Theme subtitle styling */
+.theme {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+}
+
+/* Tagline sits inside themed box */
 .tagline {
-    color: #ffda47;
-    font-size: 1.1em;
-    margin-bottom: 30px;
+    color: rgba(255,255,255,0.95);
+    margin: 6px 0 0 0;
 }
 
+/* audition status styling using themed-box aesthetics */
 .audition-status {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 30px;
+    gap: 12px;
 }
 
+/* small pill style for status text */
+.audition-pill {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(255,215,0,0.95), rgba(220,170,0,0.95));
+    color: #080808;
+    font-weight: 800;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+/* status light remains but with golden glow */
 .status-light {
-    width: 20px;
-    height: 20px;
-    background-color: #00ff00; /* Green */
+    width: 16px;
+    height: 16px;
+    background-color: #ffd24a;
     border-radius: 50%;
-    margin-right: 15px;
-    box-shadow: 0 0 15px #00ff00;
-    animation: pulse 1.5s infinite alternate;
+    margin-right: 4px;
+    box-shadow: 0 0 14px #ffd24a;
+    animation: pulse 1.2s infinite alternate;
 }
 
 @keyframes pulse {
     from {
-        box-shadow: 0 0 15px #00ff00;
+        box-shadow: 0 0 10px #ffd24a;
     }
     to {
-        box-shadow: 0 0 30px #00ff00, 0 0 40px #00ff00;
+        box-shadow: 0 0 30px #ffd24a, 0 0 46px rgba(255,210,74,0.5);
     }
 }
 
 h2 {
-    color: #fff;
-    font-size: 2.2em;
+    color: #ffffff; /* white headings */
+    font-size: 1.6rem;
     text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    margin-bottom: 25px;
+/* Content text inside themed boxes */
+.themed-box p,
+.themed-box li,
+.themed-box h3,
+.themed-box h2 {
+    color: #ffffff; /* white */
 }
 
+/* Register button tuned to gold vs black theme */
 .register-button {
-    background-color: #ffda47; /* Yellow */
-    color: #6a0000; /* Maroon */
-    border: none;
-    padding: 15px 30px;
-    font-size: 1.5em;
-    font-weight: bold;
-    border-radius: 8px;
+    background: linear-gradient(90deg, #6f0f12 55%, #0b0b0b 55%);
+    color: #ffffff;
+    border: 1px solid rgba(0,0,0,0.6);
+    padding: 12px 26px;
+    font-size: 1.05em;
+    font-weight: 800;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    margin-bottom: 50px; /* Added space below button */
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    margin: 16px 0 22px 0;
 }
 
 .register-button:hover {
-    background-color: #ffe873;
     transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.55);
 }
 
-.about-the-show,
-.rules {
-    margin-top: 50px;
-    padding-top: 30px;
-    border-top: 2px solid rgba(255, 255, 255, 0.2);
-    text-align: left; /* Align text to the left */
+/* section headings inside themed boxes use gold accent */
+.themed-box h3 {
+    color: #ffffff;
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.55);
 }
 
-.about-the-show h3,
-.rules h3 {
-    color: #ffda47;
-    font-size: 1.8em;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    text-align: center; /* Center the heading */
-}
-
-.about-the-show ul,
-.rules ol {
-    list-style-type: none; /* Remove default list bullets/numbers */
-    padding: 0;
-    margin: 0 auto;
-    max-width: 600px; /* Constrain width for readability */
-}
-
-.about-the-show li,
-.rules li {
-    background-color: #8b0000; /* Slightly lighter maroon */
-    padding: 12px 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    font-size: 1.1em;
-    line-height: 1.4;
-}
-
-.rules li:nth-child(even) {
-    background-color: #a02020; /* Alternate background for rules for better readability */
-}
-
-.disclaimer {
-    margin-top: 40px;
-    padding: 20px;
-    background-color: #500000; /* Darker maroon for disclaimer */
-    border-radius: 8px;
-    border: 1px dashed rgba(255, 255, 255, 0.5);
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9em;
-    line-height: 1.5;
-    text-align: center;
-}
-
-.disclaimer strong {
-    color: #ffda47; /* Yellow for emphasis */
-}
-
-footer {
-    margin-top: 40px;
-    font-size: 0.9em;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-/* Circus Masks */
+/* Masks adjustments to fit dark/golden mood */
 .mask-left, .mask-right {
     position: absolute;
-    width: 200px;
+    width: 180px;
     height: auto;
-    opacity: 0.6;
+    opacity: 0.85;
     z-index: 0;
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,0.6));
 }
 
 .mask-left {
-    top: 50px;
-    left: -80px;
-    transform: rotate(-20deg);
-    position: fixed; /* Keep masks fixed when scrolling */
+    top: 40px;
+    left: -64px;
+    transform: rotate(-18deg);
+    position: fixed;
 }
 
 .mask-right {
-    bottom: 50px;
-    right: -80px;
-    transform: rotate(20deg);
-    position: fixed; /* Keep masks fixed when scrolling */
+    bottom: 40px;
+    right: -64px;
+    transform: rotate(18deg);
+    position: fixed;
 }
 
-/* Past Winners Section */
-.past-winners {
-    margin-top: 50px;
-    padding-top: 30px;
-    border-top: 2px solid rgba(255, 255, 255, 0.2);
+/* Past winners and contestant area boxed */
+.past-winners,
+.about-the-show,
+.rules,
+.mini-tamasha-contestants {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: none;
 }
 
-.past-winners h3 {
-    color: #ffda47;
-    font-size: 1.8em;
-    margin-bottom: 30px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-}
-
+/* Winner list styling inside themed-box look */
 .winner-list {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Increased gap between season entries */
-    text-align: center; /* Center text within the list */
+    gap: 10px;
+    text-align: center;
     margin: 0 auto;
-    max-width: 400px; /* Adjust as needed to accommodate longer names */
+    max-width: 680px;
 }
 
-.season-entry {
-    background-color: #8b0000; /* Slightly lighter maroon for the entire entry */
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.winner-name {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #fff;
-    margin: 0 0 10px 0; /* Space below winner name */
-    padding: 8px 15px;
-    border-radius: 5px;
-}
-
+/* winner boxes */
 .winner-box {
-    background-color: #ffda47; /* Golden background for winners */
-    color: #6a0000; /* Maroon text for winners */
-    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
-    margin-bottom: 15px; /* More space below the winner's golden box */
+    display: inline-block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, rgba(111,15,18,0.15), rgba(0,0,0,0.5));
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #ffffff;
+    font-weight: 800;
 }
 
-.runner-up-name {
-    font-size: 1em;
-    color: #fff;
-    margin: 5px 0;
-    padding: 5px 10px;
-    background-color: #a02020; /* Slightly different shade for runner-ups */
-    border-radius: 4px;
+/* Results table styling */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 0 0;
+    font-weight: 700;
+}
+.results-table th, .results-table td {
+    padding: 10px 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    text-align: left;
+    color: #080808;
+    background: rgba(255,255,255,0.92);
+}
+/* Row color-coding */
+.results-table tr.r-winner td { background: #d7f7d9; }      /* light green */
+.results-table tr.r-1 td      { background: #d9eef7; }      /* light blue */
+.results-table tr.r-2 td      { background: #e9def7; }      /* light purple */
+.results-table tr.r-3 td      { background: #ffe6ef; }      /* light pink */
+.results-table tr.r-4 td      { background: #ffd6e0; }      /* rose pink */
+.results-table tr.r-elim td   { background: #ffdada; }      /* light red */
+.results-table tr.r-eject td  { background: #ffd7b3; }      /* orange */
+.results-table tr.r-walked td { background: #efe6ff; }      /* lavender */
+
+/* Ensure table is responsive */
+@media (max-width:720px) {
+    .results-table th, .results-table td { padding: 8px; font-size: 0.95rem; }
 }
 
-/* Mini Tamasha Contestants Section */
-.mini-tamasha-contestants {
-    margin-top: 50px;
-    padding-top: 30px;
-    border-top: 2px solid rgba(255, 255, 255, 0.2);
+/* content layout: apply themed-box wrapper visually by targeting direct child sections */
+header, main > .audition-status, .about-the-show, .rules, .past-winners, .mini-tamasha-contestants {
+    /* visually present as themed boxes */
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    background: linear-gradient(90deg, rgba(255,215,0,0.04) 50%, rgba(0,0,0,0.6) 50%);
+    border: 1px solid rgba(255,215,0,0.12);
 }
 
-.mini-tamasha-contestants h3 {
-    color: #ffda47;
-    font-size: 1.8em;
-    margin-bottom: 30px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+/* ensure paragraphs and lists are readable */
+p, .about-the-show li, .rules li, .runner-up-name {
+    color: #ffffff;
+    line-height: 1.5;
 }
 
-.contestant-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Responsive grid */
-    gap: 15px;
-    justify-items: center;
-    margin-bottom: 30px;
-}
-
-.contestant-placeholder {
-    width: 80px;
-    height: 80px;
-    background-color: #a02020; /* Dark red background */
-    border-radius: 50%; /* Circle shape */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5em;
-    font-weight: bold;
-    color: #ffda47; /* Yellow question mark */
-    border: 3px solid #ffda47; /* Yellow border */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
+/* contestant message stylized */
 .contestant-message {
-    color: #ffda47;
-    font-size: 1.3em;
-    font-weight: bold;
-    margin-top: 20px;
+    color: #ffffff;
+    font-size: 1.05em;
+    font-weight: 800;
+    margin-top: 8px;
 }
+
+/* footer */
+footer {
+    margin-top: 24px;
+    font-size: 0.9em;
+    color: #ffffff;
+    text-align: center;
+}
+
+/* Responsive tweaks */
+@media (max-width: 720px) {
+    header .logo {
+        max-width: 120px;
+    }
+    .header-title {
+        font-size: 1.2rem;
+        padding: 8px 12px;
+    }
+    .mask-left, .mask-right {
+        width: 120px;
+    }
+}
+
+.magazine {
+    margin: 10px 0 20px 0;
+    padding: 14px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(255,215,0,0.04) 50%, rgba(0,0,0,0.55) 50%);
+    border: 1px solid rgba(255,215,0,0.12);
+    text-align: center;
+    color: #ffffff;
+}
+
+.download-button {
+    margin-top: 10px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #ffd24a, #c98f00);
+    color: #080808;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+}
+
+.download-button:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,0.55); }
