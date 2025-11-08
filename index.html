@@ -31,7 +31,95 @@
                 <h3>HOCUS POCUS — The MT Magazine Edition 01</h3>
                 <p>Explore exclusive behind-the-scenes stories, contestant spotlights, and season highlights in the first edition of the Mini Tamasha Magazine.</p>
                 <!-- changed button into an anchor link that opens the magazine PDF in a new tab -->
-                <a class="download-button" href="https://drive.google.com/file/d/1O8f5pz6UFOwrcR-GVfnlSUcZofwYpYyR/view?usp=drivesdk" target="_blank" rel="noopener noreferrer">Download Now</a>
+                <a class="download-button" href="https://drive.google.com/file/d/1GocAptCD4Aln1aFTDllgIWM3CsTb-T2r/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Download Now</a>
+            </section>
+
+            <!-- Task Suggestions section (added) -->
+            <section class="task-section">
+                <h3>Task Suggestions</h3>
+                <p class="task-tagline">Your suggestion matters</p>
+
+                <form id="task-form" class="task-form" onsubmit="return false;">
+                    <label for="sugg-name">Your name</label>
+                    <input id="sugg-name" name="sugg-name" type="text" placeholder="e.g., Aina">
+
+                    <label for="sugg-insta">Instagram ID</label>
+                    <input id="sugg-insta" name="sugg-insta" type="text" placeholder="@yourhandle">
+
+                    <label for="task-title">Enter task title</label>
+                    <input id="task-title" name="task-title" type="text" placeholder="e.g., Angel's Dilemma" required>
+
+                    <label>Task type</label>
+                    <div class="radio-row">
+                        <label><input type="radio" name="task-type" value="Team Task" checked> Team Task</label>
+                        <label><input type="radio" name="task-type" value="Pair Task"> Pair Task</label>
+                        <label><input type="radio" name="task-type" value="Individual Task"> Individual Task</label>
+                    </div>
+
+                    <label for="task-category">Task category</label>
+                    <select id="task-category" name="task-category">
+                        <option value="Nominations Task">Nominations Task</option>
+                        <option value="Captaincy Task">Captaincy Task</option>
+                        <option value="Power Task">Power Task</option>
+                        <option value="Safety Task">Safety Task</option>
+                    </select>
+
+                    <label for="task-explanation">Enter task explanation</label>
+                    <textarea id="task-explanation" name="task-explanation" rows="5" placeholder="Describe the rules, objective, materials, time limits, and any consequences..."></textarea>
+
+                    <div class="task-buttons">
+                        <button id="generate-slip" class="generate-button">Generate Task Slip</button>
+                        <button id="download-pdf" class="download-button" disabled>Download as PDF</button>
+                    </div>
+                </form>
+
+                <div id="task-preview-wrap" class="task-preview-wrap" aria-hidden="true">
+                    <h4>Task Slip Preview</h4>
+                    <div id="task-slip" class="task-slip">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Fortune Wheel: start -->
+                <div class="wheel-section" aria-label="Fortune Wheel">
+                    <h3>Fortune Wheel</h3>
+                    <p class="wheel-instructions">Add entries (names, numbers, tasks). Pick who you're spinning for, then spin — winner will be announced with a confetti popper.</p>
+
+                    <div class="wheel-controls">
+                        <input id="wheel-entry-input" type="text" placeholder="Add entry (e.g., Aina, 1, Angel's Dilemma)">
+                        <button id="add-wheel-entry" class="small-btn">Add Entry</button>
+                        <button id="clear-wheel-entries" class="small-btn muted">Clear</button>
+                    </div>
+
+                    <div class="wheel-list-wrap">
+                        <ul id="wheel-entries" class="wheel-entries" aria-live="polite">
+                            <!-- dynamic entries -->
+                        </ul>
+                    </div>
+
+                    <label for="spin-for">Spinning for</label>
+                    <input id="spin-for" type="text" placeholder="Round 1 / Contestant name / e.g., Round 1">
+
+                    <div class="wheel-area">
+                        <canvas id="wheel-canvas" width="420" height="420" aria-hidden="true"></canvas>
+                        <div class="wheel-pointer" aria-hidden="true">▼</div>
+                    </div>
+
+                    <div class="wheel-actions">
+                        <button id="spin-wheel" class="generate-button">Spin Wheel</button>
+                        <button id="random-fill" class="small-btn">Fill sample</button>
+                    </div>
+                </div>
+
+                <div id="wheel-result-modal" class="wheel-result-modal" role="dialog" aria-hidden="true">
+                    <div class="wheel-result-card">
+                        <h4 id="wheel-result-title">Winner</h4>
+                        <p id="wheel-result-text"></p>
+                        <button id="close-result" class="small-btn">Close</button>
+                    </div>
+                    <div id="confetti-wrap" class="confetti-wrap" aria-hidden="true"></div>
+                </div>
+                <!-- Fortune Wheel: end -->
             </section>
 
             <section class="about-the-show">
@@ -107,5 +195,267 @@
             <p>&copy; 2025 Mini Tamasha Fan Project. All rights reserved.</p>
         </footer>
     </div>
+
+    <script>
+    // Task slip generation and simple print-as-pdf handler
+    (function(){
+        const form = document.getElementById('task-form');
+        const genBtn = document.getElementById('generate-slip');
+        const downloadBtn = document.getElementById('download-pdf');
+        const slipWrap = document.getElementById('task-preview-wrap');
+        const slipEl = document.getElementById('task-slip');
+
+        function buildSlipHTML(data){
+            // simple clean slip layout
+            return `
+                <div class="slip-header">
+                    <img src="mini_tamasha_logo.png" alt="Mini Tamasha" class="slip-logo">
+                    <h2>Task Slip</h2>
+                </div>
+                <div class="slip-body">
+                    <p><strong>Submitted by:</strong> ${escapeHtml(data.name || 'Anonymous')}</p>
+                    <p><strong>Insta:</strong> ${escapeHtml(data.insta || '-')}</p>
+                    <p><strong>Title:</strong> ${escapeHtml(data.title || '')}</p>
+                    <p><strong>Type:</strong> ${escapeHtml(data.type || '')}</p>
+                    <p><strong>Category:</strong> ${escapeHtml(data.category || '')}</p>
+                    <hr>
+                    <h3>Explanation</h3>
+                    <p>${escapeHtml(data.explanation || '').replace(/\\n/g, '<br>')}</p>
+                </div>
+                <div class="slip-footer">
+                    <small>Generated from Mini Tamasha — Fan Project</small>
+                </div>
+            `;
+        }
+
+        function escapeHtml(str){ return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
+
+        genBtn.addEventListener('click', () => {
+            const name = document.getElementById('sugg-name').value.trim();
+            const insta = document.getElementById('sugg-insta').value.trim();
+            const title = document.getElementById('task-title').value.trim();
+            const type = form.querySelector('input[name="task-type"]:checked').value;
+            const category = document.getElementById('task-category').value;
+            const explanation = document.getElementById('task-explanation').value.trim();
+
+            if(!title){
+                alert('Please enter a task title.');
+                return;
+            }
+
+            const html = buildSlipHTML({ name, insta, title, type, category, explanation });
+            slipEl.innerHTML = html;
+            slipWrap.setAttribute('aria-hidden','false');
+            slipWrap.style.display = 'block';
+            downloadBtn.disabled = false;
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            // Open printable window with slip content and trigger print
+            const slipHtml = slipEl.innerHTML;
+            if(!slipHtml) return;
+            const win = window.open('', '_blank', 'width=800,height=900');
+            const style = `
+                <style>
+                    body{font-family: "Noto Sans", Arial, sans-serif; padding:24px; color:#080808;}
+                    .slip-header{display:flex;align-items:center;gap:12px;border-bottom:1px solid #ddd;padding-bottom:12px;margin-bottom:12px;}
+                    .slip-logo{max-width:84px;opacity:0.95;}
+                    h2{margin:0;}
+                    .slip-body p{margin:6px 0;}
+                    .slip-body h3{margin-top:12px;}
+                    .slip-footer{margin-top:18px;font-size:0.85rem;color:#666;}
+                </style>
+            `;
+            win.document.write('<!doctype html><html><head><title>Task Slip</title>'+style+'</head><body>');
+            win.document.write(slipHtml);
+            win.document.write('</body></html>');
+            win.document.close();
+            // Delay to allow rendering then invoke print
+            setTimeout(()=>{ win.print(); }, 350);
+        });
+    })();
+    </script>
+
+    <script>
+    /* Wheel logic added */
+    (function(){
+        // Utility
+        function el(id){ return document.getElementById(id); }
+        const entriesList = el('wheel-entries');
+        const entryInput = el('wheel-entry-input');
+        const addBtn = el('add-wheel-entry');
+        const clearBtn = el('clear-wheel-entries');
+        const randomFillBtn = el('random-fill');
+        const spinBtn = el('spin-wheel');
+        const spinForInput = el('spin-for');
+        const canvas = el('wheel-canvas');
+        const ctx = canvas.getContext('2d');
+        const modal = el('wheel-result-modal');
+        const resultText = el('wheel-result-text');
+        const resultTitle = el('wheel-result-title');
+        const closeResult = el('close-result');
+        const confettiWrap = el('confetti-wrap');
+
+        let entries = []; // will hold {label, color}
+        let isSpinning = false; // prevent concurrent spins
+
+        function renderEntries(){
+            entriesList.innerHTML = '';
+            entries.forEach((v,i)=>{
+                const li = document.createElement('li');
+                li.className = 'wheel-entry';
+                li.textContent = v.label;
+                li.style.background = v.color;
+                const rm = document.createElement('button');
+                rm.className = 'entry-remove';
+                rm.title = 'Remove';
+                rm.textContent = '✕';
+                rm.addEventListener('click', ()=>{ entries.splice(i,1); drawWheel(); renderEntries(); });
+                li.appendChild(rm);
+                entriesList.appendChild(li);
+            });
+            drawWheel();
+        }
+
+        addBtn.addEventListener('click', ()=>{
+            const val = entryInput.value.trim();
+            if(!val) return;
+            entries.push({ label: val, color: randomColor() });
+            entryInput.value = '';
+            renderEntries();
+        });
+
+        clearBtn.addEventListener('click', ()=>{
+            entries = [];
+            renderEntries();
+        });
+
+        randomFillBtn.addEventListener('click', ()=>{
+            // sample filler for convenience (with colors)
+            entries = ['Aina','Moon','Anmol','Shay','Momo','Gull','Hamna','Mubs'].map(v=>({label:v, color: randomColor()}));
+            renderEntries();
+        });
+
+        // Wheel drawing
+        function drawWheel(rotation=0){
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+            const cx = w/2, cy = h/2, r = Math.min(cx,cy) - 8;
+            if(entries.length === 0){
+                // placeholder circle
+                ctx.fillStyle = '#222';
+                ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.font = '16px "Noto Sans", Arial';
+                ctx.textAlign='center'; ctx.textBaseline='middle';
+                ctx.fillText('No entries', cx, cy);
+                return;
+            }
+            const slice = (Math.PI*2)/entries.length;
+            entries.forEach((entry,i)=>{
+                const start = i*slice + rotation;
+                const end = start + slice;
+                ctx.beginPath();
+                ctx.moveTo(cx,cy);
+                ctx.arc(cx,cy,r,start,end);
+                ctx.closePath();
+                ctx.fillStyle = entry.color || (i%2===0 ? '#ffd24a' : '#c98f00');
+                ctx.fill();
+                // label
+                ctx.save();
+                ctx.translate(cx,cy);
+                const mid = start + (slice/2);
+                ctx.rotate(mid);
+                ctx.fillStyle = '#080808';
+                ctx.font = 'bold 14px "Noto Sans", Arial';
+                ctx.textAlign = 'right';
+                ctx.fillText(entry.label, r - 12, 0);
+                ctx.restore();
+            });
+        }
+
+        // Spin animation: uses easing to simulate slowdown and picks winner
+        function spinWheel(){
+            if(isSpinning || entries.length===0) return;
+            isSpinning = true;
+            spinBtn.disabled = true;
+            const dur = 4500 + Math.random()*2200;
+            const spins = 6 + Math.random()*6; // total revolutions
+            const slice = (Math.PI*2)/entries.length;
+            const start = performance.now();
+            const startRot = 0;
+            const endRot = startRot + spins * (Math.PI*2) + (Math.random()* (Math.PI*2));
+            function easeOutCubic(t){ return 1 - Math.pow(1-t,3); }
+            function frame(now){
+                const t = Math.min(1, (now-start)/dur);
+                const eased = easeOutCubic(t);
+                const rot = startRot + (endRot - startRot) * eased;
+                drawWheel(rot);
+                if(t < 1){
+                    requestAnimationFrame(frame);
+                } else {
+                    // determine winner by pointer at top (angle -PI/2)
+                    const finalAngle = rot % (Math.PI*2);
+                    // pointer points downward; our pointer is at -90deg (3*PI/2). We'll compute index.
+                    const pointerAngle = (Math.PI*3/2 - finalAngle + Math.PI*2) % (Math.PI*2);
+                    const winningIndex = Math.floor(pointerAngle / slice) % entries.length;
+                    announceWinner(entries[winningIndex]);
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+                }
+            }
+            requestAnimationFrame(frame);
+        }
+
+        function announceWinner(winner){
+            const who = spinForInput.value.trim() || 'Spin';
+            resultTitle.textContent = 'Winner';
+            // announce winner name and context (no textual "POPPERS!" — confetti poppers are launched separately)
+            resultText.innerHTML = `<strong>${escapeHtml(winner.label)}</strong><br><small>(${escapeHtml(who)})</small>`;
+            modal.setAttribute('aria-hidden','false');
+            modal.style.display = 'flex';
+            launchConfetti();
+        }
+
+        function escapeHtml(str){ return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
+
+        closeResult.addEventListener('click', ()=>{ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); confettiWrap.innerHTML=''; });
+
+        // Simple confetti popper: creates many small colored particles that animate upward then fall
+        function launchConfetti(){
+            confettiWrap.innerHTML = '';
+            confettiWrap.style.display = 'block';
+            for(let i=0;i<60;i++){
+                const p = document.createElement('div');
+                p.className = 'confetti';
+                const size = 6 + Math.random()*8;
+                p.style.width = p.style.height = size+'px';
+                p.style.background = randomColor();
+                p.style.left = (40 + Math.random()*20) + '%';
+                p.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
+                confettiWrap.appendChild(p);
+                // animate via CSS with random durations using inline style variable
+                p.style.animationDelay = (Math.random()*0.15)+'s';
+                p.style.animationDuration = (0.9 + Math.random()*1.2)+'s';
+            }
+            // auto-hide after 3s
+            setTimeout(()=>{ confettiWrap.innerHTML=''; }, 3200);
+        }
+        function randomColor(){
+            const palette = ['#ffd24a','#c98f00','#6f0f12','#e64a19','#6ab04c','#2980b9'];
+            return palette[Math.floor(Math.random()*palette.length)];
+        }
+
+        // wire spin button
+        spinBtn.addEventListener('click', spinWheel);
+
+        // initialize empty wheel draw
+        drawWheel();
+
+        // expose minimal API for console/debug if needed
+        window.__mtWheel = { add(val){ entries.push({label:String(val), color: randomColor()}); renderEntries(); }, entries: entries };
+    })();
+    </script>
 </body>
 </html>
